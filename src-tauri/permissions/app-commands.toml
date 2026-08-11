@@ -1,0 +1,24 @@
+[[permission]]
+identifier = "allow-register-1v1-hotkeys"
+description = "Allow calling the register_1v1_hotkeys command"
+commands.allow = ["register_1v1_hotkeys"]
+
+[[permission]]
+identifier = "allow-unregister-1v1-hotkeys"
+description = "Allow calling the unregister_1v1_hotkeys command"
+commands.allow = ["unregister_1v1_hotkeys"]
+
+[[permission]]
+identifier = "allow-unregister-hotkey"
+description = "Allow calling the unregister_hotkey command"
+commands.allow = ["unregister_hotkey"]
+
+[[permission]]
+identifier = "allow-set-1v1-overlay-lock"
+description = "Allow calling the set_1v1_overlay_lock command"
+commands.allow = ["set_1v1_overlay_lock"]
+
+[[permission]]
+identifier = "allow-set-bare-modifiers"
+description = "Allow calling the set_bare_modifiers command"
+commands.allow = ["set_bare_modifiers"]

@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark; /* Forțează scrollbar-ul și elementele de sistem pe dark */
+
+  /* ── Design tokens ──────────────────────────────────────────────────────────
+     Single source of truth for the visual system. Values are derived from the
+     palette already in use so nothing shifts unexpectedly; the point is to stop
+     the per-file drift (4 near-identical dark hexes, radii 5-20px, ad-hoc
+     z-index). Inline styles reference these via var(--token). */
+
+  /* Surfaces - dark, layered low→high. Subtle cool tint (toward the app's
+     blue-black) keeps them from reading as flat neutral gray. */
+  --surface-base:    #0B0B11;            /* app background floor */
+  --surface-1:       #111118;            /* raised panels / chips */
+  --surface-2:       #16161E;            /* cards / modals */
+  --surface-3:       #1C1C26;            /* hover/raised card, inset wells */
+  --surface-input:   #0C0C14;            /* form fields */
+  --surface-float:   rgba(17,17,24,0.92);/* floating menus (the only glass) */
+
+  /* Borders */
+  --border-soft:     rgba(255,255,255,0.05);
+  --border:          rgba(255,255,255,0.08);
+  --border-strong:   rgba(255,255,255,0.14);
+
+  /* Ink ramp - white-on-dark, all AA-verified at the base surface
+     (1: ~9.6:1, 2: ~6.8:1, 3: ~5.0:1, 4: large/decorative only ~3.5:1) */
+  --ink-1:           rgba(255,255,255,0.95);
+  --ink-2:           rgba(255,255,255,0.72);
+  --ink-3:           rgba(255,255,255,0.58);
+  --ink-4:           rgba(255,255,255,0.42);
+
+  /* Accent - driven by --accent-color (set on :root from the theme store).
+     These derived tokens stop every file re-deriving `${accent}15` by hand and
+     keep the glow/tint "seasoning, not the meal". */
+  --accent:          var(--accent-color, #E94560);
+  --accent-faint:    color-mix(in srgb, var(--accent-color, #E94560) 8%,  transparent);
+  --accent-soft:     color-mix(in srgb, var(--accent-color, #E94560) 14%, transparent);
+  --accent-muted:    color-mix(in srgb, var(--accent-color, #E94560) 22%, transparent);
+  --accent-border:   color-mix(in srgb, var(--accent-color, #E94560) 38%, transparent);
+  --accent-glow:     color-mix(in srgb, var(--accent-color, #E94560) 55%, transparent);
+  --on-accent:       #ffffff;            /* text on a filled accent surface */
+
+  /* Semantic state - win/loss carry a SHAPE+ICON in the UI, never hue alone
+     (colorblind-safe per PRODUCT.md). Loss is intentionally distinct from the
+     brand accent so a red accent never reads as a permanent "loss" state. */
+  --win:        #2ED27D;  --win-soft:    rgba(46,210,125,0.16);  --win-border:    rgba(46,210,125,0.42);
+  --loss:       #F0506E;  --loss-soft:   rgba(240,80,110,0.16);  --loss-border:   rgba(240,80,110,0.42);
+  --success:    #2ED27D;  --success-soft:rgba(46,210,125,0.16);
+  --danger:     #F0506E;  --danger-soft: rgba(240,80,110,0.16);
+  --warning:    #FFB74D;  --warning-soft:rgba(255,183,77,0.16);
+  --info:       #4FC3F7;  --info-soft:   rgba(79,195,247,0.16);
+
+  /* Radii */
+  --r-xs:  6px;
+  --r-sm:  8px;
+  --r-md:  10px;
+  --r-lg:  14px;
+  --r-xl:  18px;
+  --r-pill: 999px;
+
+  /* Elevation - one shadow scale, no more ad-hoc per-card values */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.32);
+  --shadow-md: 0 6px 20px -6px rgba(0,0,0,0.45);
+  --shadow-lg: 0 18px 44px -14px rgba(0,0,0,0.58);
+  --shadow-xl: 0 30px 72px -18px rgba(0,0,0,0.70);
+
+  /* Z-index scale (semantic, no more 9999) */
+  --z-base:      1;
+  --z-sticky:    10;
+  --z-dropdown:  100;
+  --z-modal:     1000;
+  --z-toast:     2000;
+  --z-critical:  3000;
+
+  /* Motion */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur:      180ms;
+  --dur-slow: 240ms;
+
+  /* Type - optical-size aware on Windows 11 (the primary target). 'Segoe UI
+     Variable Display' is the large-optical cut for headings/numerals, 'Text'
+     the body cut; both gracefully fall back to plain Segoe UI elsewhere. */
+  --font-ui:      'Segoe UI Variable Text', 'Segoe UI', system-ui, Tahoma, Geneva, Verdana, sans-serif;
+  --font-display: 'Segoe UI Variable Display', 'Segoe UI', system-ui, Tahoma, Geneva, Verdana, sans-serif;
+  --font-mono:    ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', Consolas, monospace;
+}
+
+/* ── Modern preset: obsidian liquid-glass reskin ─────────────────────────────
+   Scoped to the main window's root, which carries data-app-preset="modern"
+   (set in App.tsx). Overlay windows never get the attribute, so they're
+   untouched. This re-skins the ENTIRE app by redefining the design tokens:
+   every surface that already references var(--surface-*) / var(--border) /
+   var(--r-*) turns translucent + frosted with zero per-component changes.
+   No layout or behavior changes — purely cosmetic. The structural panels
+   (header/sidebar/content) get their backdrop-blur + floating gutter from
+   App.tsx, since those properties can't be driven by tokens. */
+[data-app-preset="modern"] {
+  /* Surfaces become low-alpha translucent whites: stacked over the obsidian
+     base + aurora and blurred by the parent panels, they read as layered glass.
+     Alphas kept low so nested cards don't brighten into a muddy gray. */
+  --surface-base:  transparent;
+  --surface-1:     rgba(255,255,255,0.045);
+  --surface-2:     rgba(255,255,255,0.05);
+  --surface-3:     rgba(255,255,255,0.08);
+  --surface-input: rgba(0,0,0,0.28);
+  --surface-float: rgba(20,20,28,0.82);
+
+  /* Hairline borders + a touch more contrast on the strong tier */
+  --border-soft:   rgba(255,255,255,0.06);
+  --border:        rgba(255,255,255,0.10);
+  --border-strong: rgba(255,255,255,0.18);
+
+  /* Slightly larger radii for the softer, more modern feel */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 22px;
+
+  /* Deeper, single elevation language */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md: 0 16px 44px -18px rgba(0,0,0,0.6);
+  --shadow-lg: 0 24px 64px -20px rgba(0,0,0,0.68);
+  --shadow-xl: 0 36px 90px -24px rgba(0,0,0,0.78);
+  /* Dark translucent glass for deep wells / scrims (the near-black hexes). */
+  --glass-deep: rgba(10,10,15,0.55);
+}
+
+/* ── Modern: turn the real screens into the mockup's liquid glass ────────────
+   The app styles cards inline — partly with var(--surface-*) tokens, partly
+   with hardcoded dark hexes. CSS can't read which, so we hook elements by their
+   inline-style substring and:
+     • token surfaces  → just add the blur + specular (color already translucent)
+     • hardcoded bg hex → override the color to a translucent surface (!important
+       beats the inline value) AND add blur + specular
+     • hardcoded border hex → soften to a hairline
+   Everything is scoped to [data-app-preset="modern"], so Classic is byte-for-
+   byte identical and overlay windows (no attribute) are untouched. No .tsx
+   data/logic is changed — purely cosmetic, main-window only.
+
+   IMPORTANT: the browser serializes inline hex colors to rgb() form in the
+   style attribute (Chromium / WebView2: `#0D0D12` → `rgb(13, 13, 18)`), so the
+   selectors below match the rgb() spelling, not the hex. rgba() (alpha) colors
+   never match these, which conveniently leaves translucent scrims alone. */
+
+/* Frosted treatment shared by every glass surface (tokens + converted hex). */
+[data-app-preset="modern"] [style*="var(--surface-1)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="var(--surface-2)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="var(--surface-3)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(13, 13, 18)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(13, 13, 20)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(13, 14, 15)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(14, 14, 20)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(14, 14, 21)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(15, 15, 22)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(17, 17, 24)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(18, 18, 26)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(20, 20, 28)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(21, 21, 29)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(22, 22, 30)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(26, 26, 34)"]:not([style*="gradient"]),
+[data-app-preset="modern"] [style*="rgb(26, 26, 36)"]:not([style*="gradient"]) {
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 16px 44px -22px rgba(0,0,0,0.55);
+}
+
+/* Mid-deep + base card backgrounds → lifted translucent-white glass (the
+   mockup's panels). These are the big content cards, so they read as raised. */
+[data-app-preset="modern"] [style*="rgb(13, 13, 18)"]:not([style*="gradient"]),   /* #0D0D12 */
+[data-app-preset="modern"] [style*="rgb(13, 13, 20)"]:not([style*="gradient"]),   /* #0D0D14 */
+[data-app-preset="modern"] [style*="rgb(13, 14, 15)"]:not([style*="gradient"]),   /* #0D0E0F */
+[data-app-preset="modern"] [style*="rgb(14, 14, 20)"]:not([style*="gradient"]),   /* #0E0E14 */
+[data-app-preset="modern"] [style*="rgb(14, 14, 21)"]:not([style*="gradient"]),   /* #0E0E15 */
+[data-app-preset="modern"] [style*="rgb(15, 15, 22)"]:not([style*="gradient"]),   /* #0F0F16 */
+[data-app-preset="modern"] [style*="rgb(17, 17, 24)"]:not([style*="gradient"]),   /* #111118 */
+[data-app-preset="modern"] [style*="rgb(18, 18, 26)"]:not([style*="gradient"]) {  /* #12121A */
+  background: var(--surface-1) !important;
+}
+
+/* Card backgrounds → frosted surface-2 / surface-3. */
+[data-app-preset="modern"] [style*="rgb(20, 20, 28)"]:not([style*="gradient"]),   /* #14141C */
+[data-app-preset="modern"] [style*="rgb(21, 21, 29)"]:not([style*="gradient"]),   /* #15151D */
+[data-app-preset="modern"] [style*="rgb(22, 22, 30)"]:not([style*="gradient"]) {  /* #16161E */
+  background: var(--surface-2) !important;
+}
+[data-app-preset="modern"] [style*="rgb(26, 26, 34)"]:not([style*="gradient"]),   /* #1A1A22 */
+[data-app-preset="modern"] [style*="rgb(26, 26, 36)"]:not([style*="gradient"]) {  /* #1A1A24 */
+  background: var(--surface-3) !important;
+}
+
+/* Only the true near-blacks (page floor / opaque scrims) stay dark glass. */
+[data-app-preset="modern"] [style*="rgb(10, 10, 15)"]:not([style*="gradient"]),   /* #0A0A0F */
+[data-app-preset="modern"] [style*="rgb(10, 10, 16)"]:not([style*="gradient"]),   /* #0A0A10 */
+[data-app-preset="modern"] [style*="rgb(7, 7, 12)"]:not([style*="gradient"]) {    /* #07070C */
+  background: var(--glass-deep) !important;
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+}
+
+/* Form-field wells → recessed dark, gentle blur, no specular. */
+[data-app-preset="modern"] [style*="var(--surface-input)"],
+[data-app-preset="modern"] [style*="rgb(12, 12, 20)"] {  /* #0C0C14 */
+  background: var(--surface-input) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.35);
+}
+
+/* Hardcoded borders → hairlines. */
+[data-app-preset="modern"] [style*="rgb(37, 37, 48)"],   /* #252530 */
+[data-app-preset="modern"] [style*="rgb(29, 29, 37)"],   /* #1D1D25 */
+[data-app-preset="modern"] [style*="rgb(42, 42, 53)"],   /* #2A2A35 */
+[data-app-preset="modern"] [style*="rgb(42, 42, 54)"],   /* #2A2A36 */
+[data-app-preset="modern"] [style*="rgb(32, 32, 44)"],   /* #20202C */
+[data-app-preset="modern"] [style*="rgb(31, 31, 40)"],   /* #1F1F28 */
+[data-app-preset="modern"] [style*="rgb(31, 31, 42)"],   /* #1F1F2A */
+[data-app-preset="modern"] [style*="rgb(30, 30, 42)"],   /* #1E1E2A */
+[data-app-preset="modern"] [style*="rgb(30, 30, 40)"],   /* #1E1E28 */
+[data-app-preset="modern"] [style*="rgb(28, 28, 40)"],   /* #1C1C28 */
+[data-app-preset="modern"] [style*="rgb(44, 44, 56)"],   /* #2C2C38 */
+[data-app-preset="modern"] [style*="rgb(53, 53, 66)"] {  /* #353542 */
+  border-color: var(--border) !important;
+}
+[data-app-preset="modern"] [style*="rgb(51, 51, 56)"],   /* #333338 */
+[data-app-preset="modern"] [style*="rgb(68, 68, 80)"],   /* #444450 */
+[data-app-preset="modern"] [style*="rgb(85, 85, 96)"] {  /* #555560 */
+  border-color: var(--border-strong) !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Previne scroll-ul inestetic */
+  background-color: var(--surface-base);
+  font-family: var(--font-ui);
+  user-select: none; /* Previne selectarea textului ca pe un site */
+}
+
+input:focus {
+  outline: none; /* Scoate bordura albastră inestetică de la browser */
+}
+
+html, body {
+  background-color: transparent !important;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Keyboard focus ───────────────────────────────────────────────────────────
+   Visible ring for keyboard users only (mouse clicks don't trigger it). Closes
+   the "sidebar not keyboard-navigable" persona flag without adding a ring to
+   every mouse click. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+[tabindex]:focus:not(:focus-visible) { outline: none; }
+
+/* ── Shared animation library ─────────────────────────────────────────────────
+   Used across tabs so motion shares one rhythm. Entrances ease-out (expo/quart),
+   no bounce/overshoot. Reveal animations enhance already-visible content. */
+@keyframes csFadeIn   { from { opacity: 0 } to { opacity: 1 } }
+@keyframes csRise     { from { opacity: 0; transform: translateY(8px) }  to { opacity: 1; transform: translateY(0) } }
+@keyframes csPopIn    { from { opacity: 0; transform: translateY(6px) scale(0.985) } to { opacity: 1; transform: translateY(0) scale(1) } }
+@keyframes csShimmer   { from { background-position: -180% 0 } to { background-position: 180% 0 } }
+@keyframes csPulseGlow { 0%,100% { opacity: 0.55 } 50% { opacity: 1 } }
+@keyframes pageIn      { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: translateY(0) } }
+
+/* ── Utilities ────────────────────────────────────────────────────────────────*/
+/* Tabular figures: stop timers/stat numbers from reflowing as digits change. */
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+/* Skeleton loader: a shimmer placeholder for content >300ms (vs a centered
+   spinner). Reserve the same box the real content will occupy. */
+.cs-skeleton {
+  background: linear-gradient(100deg,
+    var(--surface-2) 30%,
+    var(--surface-3) 50%,
+    var(--surface-2) 70%);
+  background-size: 200% 100%;
+  animation: csShimmer 1.4s ease-in-out infinite;
+  border-radius: var(--r-sm);
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────────
+   Honor the OS setting everywhere: collapse animations/transitions to an
+   instant change (a crossfade where opacity is involved). Closes the known
+   PRODUCT.md gap; the streamer overlays benefit most. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cs-skeleton { animation: none; }
+}
+
+/* Opaque dropdown container for modern preset so text behind does not show through.
+   The :not([style*="gradient"]) lifts this selector's specificity to (0,3,0) so it
+   beats the frosted surface rules above — those carry the same :not() and would
+   otherwise win on specificity even against the .opaque-dropdown class, leaving the
+   panel translucent (the killer list reading through to the cards behind it). */
+[data-app-preset="modern"] .opaque-dropdown:not([style*="gradient"]) {
+  background: #14141C !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
