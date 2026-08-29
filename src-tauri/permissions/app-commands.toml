@@ -22,3 +22,8 @@ commands.allow = ["set_1v1_overlay_lock"]
 identifier = "allow-set-bare-modifiers"
 description = "Allow calling the set_bare_modifiers command"
 commands.allow = ["set_bare_modifiers"]
+
+[[permission]]
+identifier = "allow-rebind-hotkey"
+description = "Allow calling the rebind_hotkey command"
+commands.allow = ["rebind_hotkey"]

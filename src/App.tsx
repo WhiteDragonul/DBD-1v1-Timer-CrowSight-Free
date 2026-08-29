@@ -16,8 +16,75 @@ import { THEME_COLORS } from "./OneVOne";
 import { mountLowlevelBridge } from "./lib/lowlevelBridge";
 import { openDiscordInvite, openWebsite } from "./lib/links";
 import OneVOneTimer from "./OneVOneTimer";
+import DSTimer from "./DSTimer";
+import Crosshair from "./Crosshair";
 import PremiumSection from "./components/PremiumSection";
 import { ToastHost } from "./Toast";
+
+// ─── Pages ───────────────────────────────────────────────────────────────────
+// Everything here is free and account-less, so there is no gate: the tab strip
+// is the whole navigation model.
+type Page = "1v1" | "perk-timer" | "crosshair";
+
+const PAGES: { id: Page; label: string; blurb: string }[] = [
+  { id: "1v1",        label: "1v1 Timer",   blurb: "Match timer overlay with hotkeys and scoring" },
+  { id: "perk-timer", label: "Perk Timer",  blurb: "Endurance + Elusive countdown overlay" },
+  { id: "crosshair",  label: "Crosshair",   blurb: "Click-through crosshair at screen center" },
+];
+
+const PAGE_KEY = "1v1-page";
+
+function readStoredPage(): Page {
+  try {
+    const v = localStorage.getItem(PAGE_KEY);
+    if (PAGES.some(p => p.id === v)) return v as Page;
+  } catch { /* non-fatal */ }
+  return "1v1";
+}
+
+// ─── Tab strip ───────────────────────────────────────────────────────────────
+function NavTabs({ page, onChange, accent }: {
+  page: Page; onChange: (p: Page) => void; accent: string;
+}) {
+  return (
+    <nav
+      data-tauri-drag-region="false"
+      onMouseDown={e => e.stopPropagation()}
+      style={{
+        display: "flex", gap: "6px", flexShrink: 0,
+        padding: "10px 28px",
+        background: "var(--surface-1)",
+        borderBottom: "1px solid var(--border)",
+      }}
+    >
+      {PAGES.map(p => {
+        const active = p.id === page;
+        return (
+          <button
+            key={p.id}
+            title={p.blurb}
+            onClick={() => onChange(p.id)}
+            style={{
+              padding: "8px 16px", borderRadius: "9px",
+              background: active ? `${accent}1F` : "transparent",
+              border: `1px solid ${active ? accent : "transparent"}`,
+              color: active ? accent : "rgba(255,255,255,0.55)",
+              fontSize: "11.5px", fontWeight: 800,
+              letterSpacing: "0.05em", textTransform: "uppercase",
+              fontFamily: "var(--font-ui)",
+              cursor: "pointer", transition: "all 0.15s",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={e => { if (!active) e.currentTarget.style.color = "rgba(255,255,255,0.85)"; }}
+            onMouseLeave={e => { if (!active) e.currentTarget.style.color = "rgba(255,255,255,0.55)"; }}
+          >
+            {p.label}
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
 
 // ─── Logo mark ───────────────────────────────────────────────────────────────
 function LogoMark({ accent }: { accent: string }) {
@@ -355,6 +422,11 @@ export default function App() {
   const appPreset   = useTheme(s => s.appPreset);
   const modern      = appPreset === "modern";
 
+  const [page, setPage] = useState<Page>(readStoredPage);
+  useEffect(() => {
+    try { localStorage.setItem(PAGE_KEY, page); } catch { /* non-fatal */ }
+  }, [page]);
+
   useEffect(() => {
     // Push the persisted bare-key modifier switches to the Rust hook so the
     // preference survives restarts.
@@ -446,7 +518,13 @@ export default function App() {
         <WindowControls />
       </header>
 
-      {/* ── Content ── */}
+      <NavTabs page={page} onChange={setPage} accent={accentColor} />
+
+      {/* ── Content ──
+          Every page stays MOUNTED and is hidden with display:none rather than
+          unmounted. The Perk Timer owns the window.__hotkeyDS handler and the
+          overlay's event listeners; unmounting it on a tab switch would make
+          the hotkey silently do nothing while the OS binding was still live. */}
       <main style={{
         flex: 1,
         overflowY: "auto",
@@ -456,12 +534,31 @@ export default function App() {
         {/* Classic keeps the timer's original 440px column, so the Appearance
             panel is constrained to match. Modern uses the full-width grid. */}
         <div style={{
-          display: "flex", flexDirection: "column", gap: "20px",
+          display: page === "1v1" ? "flex" : "none",
+          flexDirection: "column", gap: "20px",
           maxWidth: modern ? "1100px" : "440px",
           margin: "0 auto",
         }}>
           <OneVOneTimer />
           <AppearancePanel />
+        </div>
+
+        <div style={{
+          display: page === "perk-timer" ? "flex" : "none",
+          flexDirection: "column",
+          maxWidth: modern ? "1100px" : "620px",
+          margin: "0 auto",
+        }}>
+          <DSTimer />
+        </div>
+
+        <div style={{
+          display: page === "crosshair" ? "flex" : "none",
+          flexDirection: "column",
+          maxWidth: modern ? "1100px" : "620px",
+          margin: "0 auto",
+        }}>
+          <Crosshair />
         </div>
       </main>
 

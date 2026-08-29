@@ -54,6 +54,21 @@ fn unregister_hotkey(key: String) {
     lowlevel::unregister_chord(&key);
 }
 
+/// Bind a Perk Timer action to a chord, replacing whatever it answered to
+/// before. `old_key` is dropped first so a rebind never leaves the previous
+/// chord live, and passing the same key twice is the idempotent
+/// "(re-)assert this binding" call the frontend makes on mount.
+///
+/// Actions are whitelisted: "ds" is the shared Perk Timer key, "perk_<id>" is
+/// a row that carries its own. Everything else is ignored rather than trusted.
+#[tauri::command]
+fn rebind_hotkey(action: String, old_key: String, new_key: String) {
+    if !validate_key(&old_key) || !validate_key(&new_key) { return; }
+    if !matches!(action.as_str(), "ds" | "perk_bt" | "perk_elusive") { return; }
+    lowlevel::unregister_chord(&old_key);
+    lowlevel::register(&action, &new_key);
+}
+
 /// Bridge: lock/unlock the overlay's cursor-passthrough state from the main
 /// window. Routing it through here keeps the lock state authoritative on one
 /// side (the control panel).
@@ -81,6 +96,7 @@ fn main() {
             register_1v1_hotkeys,
             unregister_1v1_hotkeys,
             unregister_hotkey,
+            rebind_hotkey,
             set_1v1_overlay_lock,
             set_bare_modifiers
         ])
@@ -96,8 +112,10 @@ fn main() {
                 let app_handle = app.handle().clone();
                 main_win.on_window_event(move |event| {
                     if let tauri::WindowEvent::CloseRequested { .. } = event {
-                        if let Some(w) = app_handle.get_webview_window("1v1-overlay") {
-                            let _ = w.destroy();
+                        for label in ["1v1-overlay", "ds-overlay", "crosshair-overlay"] {
+                            if let Some(w) = app_handle.get_webview_window(label) {
+                                let _ = w.destroy();
+                            }
                         }
                     }
                 });

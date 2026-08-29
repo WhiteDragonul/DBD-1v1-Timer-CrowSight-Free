@@ -2,7 +2,9 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window only",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
     "opener:default",
@@ -36,6 +38,9 @@
     "allow-unregister-1v1-hotkeys",
     "allow-unregister-hotkey",
     "allow-set-1v1-overlay-lock",
-    "allow-set-bare-modifiers"
+    "allow-set-bare-modifiers",
+    "allow-rebind-hotkey",
+    "core:window:allow-primary-monitor",
+    "core:window:allow-current-monitor"
   ]
 }

@@ -2,7 +2,11 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "overlays",
   "description": "Minimal capability for the overlay window - events and basic window ops only, no IPC commands",
-  "windows": ["1v1-overlay"],
+  "windows": [
+    "1v1-overlay",
+    "ds-overlay",
+    "crosshair-overlay"
+  ],
   "permissions": [
     "core:default",
     "core:event:allow-emit",

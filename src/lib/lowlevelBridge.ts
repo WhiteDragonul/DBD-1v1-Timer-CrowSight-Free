@@ -26,10 +26,19 @@ function dispatch(action: string) {
   if (now - (lastFiredAt[action] ?? 0) < DEBOUNCE_MS) return;
   lastFiredAt[action] = now;
 
+  // Perk Timer rows that carry their own key arrive as "perk_<id>" and are
+  // routed through a single handler that takes the perk id.
+  if (action.startsWith("perk_")) {
+    const perk = (window as unknown as { __hotkeyPerk?: (id: string) => void }).__hotkeyPerk;
+    if (typeof perk === "function") perk(action.slice("perk_".length));
+    return;
+  }
+
   const w = window as unknown as Record<string, undefined | (() => void)>;
   const map: Record<string, string> = {
     cycle: "__hotkey1v1Cycle",
     swap:  "__hotkey1v1Swap",
+    ds:    "__hotkeyDS",
   };
   const fn = w[map[action] ?? ""];
   if (typeof fn === "function") fn();

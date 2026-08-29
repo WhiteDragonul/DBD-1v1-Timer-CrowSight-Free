@@ -15,6 +15,7 @@
  */
 
 import { use1v1 } from "../OneVOne";
+import { useTheme } from "../theme";
 
 /**
  * Build the chord-string from a raw KeyboardEvent. Returns null if the event
@@ -109,8 +110,9 @@ export function formatWheel(e: WheelEvent): string | null {
 
 /** One entry per currently-bound hotkey. */
 export interface HotkeyBinding {
-  /** Stable owner identifier used to skip self-collision checks. */
-  ownerId: "cycle" | "swap";
+  /** Stable owner identifier used to skip self-collision checks.
+   *  `perk:<id>` for a Perk Timer row that carries its own key. */
+  ownerId: "cycle" | "swap" | "ds" | `perk:${string}`;
   /** Human-readable label shown in the conflict toast. */
   label:   string;
   /** Current key string ("F1", "Ctrl+F2", etc.). */
@@ -123,10 +125,29 @@ export interface HotkeyBinding {
  */
 export function getAllHotkeys(): HotkeyBinding[] {
   const v = use1v1.getState();
-  return [
-    { ownerId: "cycle", label: "Start / Stop / Reset",  key: v.hotkeyCycle },
-    { ownerId: "swap",  label: "Swap Active Player",    key: v.hotkeySwap  },
+  const t = useTheme.getState();
+  const out: HotkeyBinding[] = [
+    { ownerId: "cycle", label: "1v1 Start / Stop / Reset", key: v.hotkeyCycle },
+    { ownerId: "swap",  label: "1v1 Swap Active Player",   key: v.hotkeySwap  },
+    { ownerId: "ds",    label: "Perk Timer",               key: t.hotkeyDS    },
   ];
+  // Perks only appear once they carry their own key. A perk still riding the
+  // shared key must NOT be listed, or every row would report a conflict with
+  // the Perk Timer hotkey it is deliberately sharing.
+  if (t.perkHotkeysEnabled) {
+    for (const [id, key] of Object.entries(t.perkHotkeys)) {
+      if (key && key !== t.hotkeyDS) {
+        out.push({ ownerId: `perk:${id}`, label: `Perk Timer - ${id}`, key });
+      }
+    }
+  }
+  return out;
+}
+
+/** Display form of a chord-string. Kept as a seam: the stored form is already
+ *  what we want on screen today, but call sites shouldn't assume that. */
+export function prettyChord(chord: string): string {
+  return chord;
 }
 
 /**

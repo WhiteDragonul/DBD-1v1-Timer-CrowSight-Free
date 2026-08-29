@@ -367,6 +367,19 @@ fn handle_event(event: Event, app: &AppHandle) {
 
     if *KILLED.lock().unwrap() { return; }
 
+    // Crosshair hold-to-show: mirror the physical right-mouse-button state to
+    // the webviews. The crosshair overlay window is click-through and never
+    // focused (the game is), so it can't see mouse input itself - this hook is
+    // the only place that can. Pure observation, still pass-through: the game
+    // receives M2 normally. The overlay ignores these events unless its
+    // "hold M2 to show" toggle is on, and press/release edges are cheap, so we
+    // emit unconditionally rather than plumb an enable/disable command.
+    match event.event_type {
+        EventType::ButtonPress(Button::Right)   => { let _ = app.emit("crosshair-rmb-state", true); }
+        EventType::ButtonRelease(Button::Right) => { let _ = app.emit("crosshair-rmb-state", false); }
+        _ => {}
+    }
+
     // Bare-modifier-as-hotkey path. Fires only on the first physical press
     // edge AND only when the corresponding bareMod toggle is on. Looks up the
     // modifier name directly so candidate_chords doesn't mangle it into a
