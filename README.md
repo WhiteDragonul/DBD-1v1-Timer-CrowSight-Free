@@ -1,7 +1,7 @@
-# CrowSight Free - DBD Overlay with a 1v1 Timer
+# DBD 1v1 Timer - CrowSight Free
 
-The free version of **CrowSight**, a Dead by Daylight overlay for Windows 10 and 11.
-It puts a **DBD 1v1 timer**, perk timers and a custom crosshair on top of your game,
+A free **DBD 1v1 timer** from **CrowSight**, the Dead by Daylight overlay for Windows 10 and 11.
+It puts a 1v1 timer, perk timers and a custom crosshair on top of your game,
 with no account needed.
 
 **Download:** https://www.crowsightoverlay.com/download
