@@ -6,6 +6,8 @@ with no account needed.
 
 **Download:** https://www.crowsightoverlay.com/download
 
+Also on itch.io: https://whitedbd.itch.io/crowsight-dbd-1v1-timer-free
+
 ## What's included
 
 - **1v1 Timer** - chase timers for both players with the score on screen, for 1v1s and tournaments
