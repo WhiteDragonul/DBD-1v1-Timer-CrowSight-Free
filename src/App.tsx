@@ -495,11 +495,11 @@ export default function App() {
           <span style={{
             fontSize: "13px", fontWeight: 800, color: "white",
             letterSpacing: "-0.01em", whiteSpace: "nowrap", lineHeight: 1.1,
-          }}>1v1 Timer</span>
+          }}>CrowSight</span>
           <span style={{
             fontSize: "9px", fontWeight: 700, color: "rgba(255,255,255,0.4)",
             letterSpacing: "0.1em", textTransform: "uppercase", whiteSpace: "nowrap",
-          }}>Free · by CrowSight</span>
+          }}>Free - Edition</span>
         </div>
 
         <div style={{ flex: 1 }} />
