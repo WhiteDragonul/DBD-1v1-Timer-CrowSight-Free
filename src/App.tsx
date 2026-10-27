@@ -2,8 +2,9 @@
 //
 // One window, one page: the 1v1 Timer control panel (ported verbatim from
 // CrowSight) plus an Appearance panel for the accent color and the
-// classic/modern visual preset. No account, no sign-in, no network calls -
-// every preference lives in localStorage.
+// classic/modern visual preset. No account, no sign-in - every preference
+// lives in localStorage. The only network call is the startup update check
+// against this repo's GitHub Releases (see components/UpdateBanner).
 //
 // The window is `decorations: false`, so the header below IS the title bar:
 // it carries data-tauri-drag-region and hosts our own min/max/close buttons.
@@ -19,6 +20,7 @@ import OneVOneTimer from "./OneVOneTimer";
 import DSTimer from "./DSTimer";
 import Crosshair from "./Crosshair";
 import PremiumSection from "./components/PremiumSection";
+import UpdateBanner from "./components/UpdateBanner";
 import { ToastHost } from "./Toast";
 
 // ─── Pages ───────────────────────────────────────────────────────────────────
@@ -517,6 +519,8 @@ export default function App() {
 
         <WindowControls />
       </header>
+
+      <UpdateBanner />
 
       <NavTabs page={page} onChange={setPage} accent={accentColor} />
 
