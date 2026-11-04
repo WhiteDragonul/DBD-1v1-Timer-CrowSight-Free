@@ -467,6 +467,7 @@ export default function App() {
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
         ::-webkit-scrollbar-corner { background: transparent; }
         ::-webkit-resizer { background: transparent; display: none; }
+        @media (max-width: 560px) { .publisher-credit { display: none; } }
       `}</style>
 
       {/* ── Title bar ── */}
@@ -503,6 +504,16 @@ export default function App() {
             letterSpacing: "0.1em", textTransform: "uppercase", whiteSpace: "nowrap",
           }}>Free - Edition</span>
         </div>
+
+        {/* Publisher credit. pointerEvents: none so it never blocks dragging
+            the window; hidden below 560px so it doesn't squeeze the title. */}
+        <span className="publisher-credit" style={{
+          paddingLeft: "8px", borderLeft: "1px solid var(--border)",
+          fontSize: "9px", fontWeight: 700, color: "rgba(255,255,255,0.4)",
+          letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap",
+          overflow: "hidden", textOverflow: "ellipsis", minWidth: 0, flexShrink: 100,
+          pointerEvents: "none",
+        }}>White &amp; Feint</span>
 
         <div style={{ flex: 1 }} />
 
