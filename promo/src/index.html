@@ -1,0 +1,230 @@
+<!doctype html><html><head><meta charset="utf-8"><title>CrowSight Free promo</title>
+<style>
+@font-face{font-family:Anton;src:url(/__promo/anton.woff2) format("woff2")}
+:root{--bg:#060508;--ink:#f1e8e6;--mut:#a39798;--red:#e94560;--deep:#a30826;--line:rgba(241,232,230,.14)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,sans-serif}
+#bg,#bg i{position:absolute;inset:0}
+#g1{background:radial-gradient(620px 520px at var(--x1) var(--y1),rgba(150,8,38,var(--a1)),transparent 70%)}
+#g2{background:radial-gradient(760px 560px at var(--x2) var(--y2),rgba(90,4,24,var(--a2)),transparent 72%)}
+#vg{background:radial-gradient(1000px 640px at 50% 50%,transparent 55%,rgba(0,0,0,.6))}
+#hdr{position:absolute;left:74px;right:74px;top:38px;display:flex;justify-content:space-between;align-items:center;font:600 12px "JetBrains Mono";letter-spacing:.22em}
+#hdr b{font:400 22px Anton;letter-spacing:.06em}
+#hdr em{font-style:normal;background:var(--deep);padding:3px 7px 2px;margin-left:10px;font:400 14px Anton;letter-spacing:.1em;vertical-align:3px}
+#hdr span{color:var(--mut)}
+#bar{position:absolute;left:0;bottom:0;height:3px;background:var(--red)}
+.scene{position:absolute;inset:0;visibility:hidden}
+.mask{overflow:hidden;display:block}
+.mask>*{display:block}
+.kick{font:600 13px "JetBrains Mono";letter-spacing:.24em;color:var(--mut);display:flex;align-items:center;gap:14px}
+.kick i{width:44px;height:1px;background:var(--red)}
+.kick u{text-decoration:none;color:var(--ink)}
+h1{font:400 112px/0.98 Anton;letter-spacing:.01em;text-transform:uppercase}
+p.d{font:400 19px/1.45 Inter;color:#d6cbca;max-width:360px}
+.tags{display:flex;gap:10px;flex-wrap:wrap;max-width:380px}
+.tag{font:600 11.5px "JetBrains Mono";letter-spacing:.16em;padding:8px 11px 7px;border:1px solid var(--line);white-space:nowrap}
+.tag.f{background:var(--deep);border-color:var(--deep)}
+.feat .txt{position:absolute;left:74px;top:188px;width:390px}
+.feat .txt .kick{margin-bottom:22px}.feat .txt p{margin:26px 0 26px}
+.cnt{position:absolute;right:74px;bottom:44px;font:500 13px "JetBrains Mono";letter-spacing:.2em;color:var(--mut)}
+.cnt b{color:var(--ink);font-weight:600}
+.app{position:absolute;left:492px;top:104px;width:448px;height:438px;border:1px solid rgba(255,255,255,.1);background:#0b0b11;box-shadow:0 30px 80px rgba(0,0,0,.6);overflow:hidden}
+.app iframe{width:560px;height:548px;border:0;transform:scale(.8);transform-origin:0 0}
+.mon{position:absolute;left:764px;top:366px;width:450px;height:262px;border:1px solid rgba(255,255,255,.14);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);
+ background:radial-gradient(300px 200px at 30% 40%,#2a2327,transparent 70%),radial-gradient(360px 240px at 80% 90%,#1d2226,transparent 70%),#0d0c10}
+.mon:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 2px,transparent 2px 90px)}
+.mon .lbl{position:absolute;left:12px;top:10px;font:600 10px "JetBrains Mono";letter-spacing:.2em;color:#cfc6c5;display:flex;gap:7px;align-items:center}
+.mon .lbl i{width:6px;height:6px;border-radius:50%;background:var(--red)}
+.mon iframe{position:absolute;left:50%;top:54%;border:0;background:transparent}
+/* intro */
+#s0 .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#s0 img{width:120px;height:120px;object-fit:contain;margin-bottom:18px}
+#s0 .w{display:flex;align-items:center;gap:22px}
+#s0 h1{font-size:150px;line-height:1.1}
+#s0 .fr{font:400 150px/1 Anton;background:var(--deep);padding:12px 22px 8px}
+#s0 .sub{margin-top:26px;font:600 15px "JetBrains Mono";letter-spacing:.34em;color:#d6cbca}
+/* index */
+#s1 .l{position:absolute;left:74px;top:150px}
+#s1 h1{font-size:128px}
+#s1 h1 span{color:var(--red)}
+#s1 .rows{position:absolute;left:690px;top:176px;width:516px}
+#s1 .row{display:flex;align-items:baseline;gap:22px;padding:19px 0;border-bottom:1px solid var(--line)}
+#s1 .row b{font:500 13px "JetBrains Mono";color:var(--red);letter-spacing:.14em;width:28px}
+#s1 .row s{text-decoration:none;font:400 44px Anton;letter-spacing:.02em;flex:1}
+#s1 .row span{font:400 14px Inter;color:var(--mut);text-align:right;width:210px}
+#s1 .ft{position:absolute;left:74px;bottom:92px;font:600 13px "JetBrains Mono";letter-spacing:.24em;color:#d6cbca}
+/* safe */
+#s5 .l{position:absolute;left:74px;top:150px}
+#s5 h1{font-size:118px}
+#s5 h1 .x{color:var(--red)}
+#s5 p{position:absolute;left:78px;top:520px;font:400 21px/1.5 Inter;color:#d6cbca;max-width:640px}
+/* premium */
+#s6 .l{position:absolute;left:74px;top:176px;width:480px}
+#s6 h1{font-size:118px;margin:22px 0 26px}
+#s6 .pr{display:flex;align-items:flex-end;gap:16px}
+#s6 .pr b{font:400 64px/1 Anton}
+#s6 .pr span{font:600 12px/1.6 "JetBrains Mono";letter-spacing:.2em;color:var(--mut);padding-bottom:6px}
+#s6 .g{position:absolute;left:650px;top:182px;width:556px;display:grid;grid-template-columns:1fr 1fr;column-gap:28px}
+#s6 .g div{font:400 27px Anton;letter-spacing:.03em;padding:15px 0 13px;border-bottom:1px solid var(--line)}
+#s6 .g div.m{color:var(--red)}
+/* cta */
+#s7 .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#s7 img{width:92px;height:92px;object-fit:contain;margin-bottom:10px}
+#s7 h1{font-size:132px;line-height:1.1;display:flex;gap:26px;align-items:center}
+#s7 h1 em{font-style:normal;background:var(--deep);padding:11px 20px 7px;line-height:1}
+#s7 .url{margin-top:30px;font:600 30px "JetBrains Mono";letter-spacing:.02em;border:1px solid var(--red);padding:16px 30px 14px}
+#s7 .sm{margin-top:24px;font:600 13px "JetBrains Mono";letter-spacing:.22em;color:var(--mut);display:flex;gap:26px}
+#s7 .sm b{color:#d6cbca;font-weight:600}
+#black{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+
+/* 9:16 */
+html.v,html.v body{width:720px;height:1280px}
+.v #hdr{left:44px;right:44px;top:58px}
+.v #s0 .w{flex-direction:column;gap:14px}
+.v #s0 .sub{font-size:13px;letter-spacing:.26em;margin-top:34px}
+.v #s1 .l{left:44px;top:176px}
+.v #s1 .rows{left:44px;top:690px;width:632px}
+.v #s1 .ft{left:44px;bottom:150px;font-size:11.5px;letter-spacing:.18em}
+.v .feat .txt{left:44px;top:138px;width:632px}
+.v .feat .txt p{max-width:560px;margin:22px 0 22px}
+.v .tags{max-width:632px}
+.v .app{left:44px;top:572px;width:560px;height:548px}
+.v .app iframe{transform:none}
+.v .mon{left:226px;top:924px}
+.v .cnt{right:44px;bottom:52px}
+.v #s5 .l{left:44px;top:300px;width:632px}
+.v #s5 h1{font-size:104px}
+.v #s5 p{left:46px;top:870px;max-width:600px}
+.v #s6 .l{left:44px;top:260px;width:632px}
+.v #s6 .g{left:44px;top:690px;width:632px}
+.v #s7 h1{font-size:104px;flex-direction:column;gap:16px}
+.v #s7 .url{font-size:27px;padding:16px 22px 14px}
+.v #s7 .sm{flex-direction:column;gap:14px;align-items:center}
+</style></head><body>
+<div id="bg"><i id="g1"></i><i id="g2"></i><i id="vg"></i></div>
+
+<section class="scene" id="s0"><div class="c">
+  <img data-in="0.05" data-fx="pop" src="/logo-transparent.png">
+  <div class="w"><span class="mask"><h1 data-in="0.3" data-fx="up">CrowSight</h1></span><span class="mask"><span class="fr" data-in="1.21" data-fx="up">FREE</span></span></div>
+  <div class="sub" data-in="2.42" data-fx="fade">THE FREE DEAD BY DAYLIGHT OVERLAY</div>
+</div></section>
+
+<section class="scene" id="s1">
+  <div class="l"><div class="kick" data-in="0.05" data-fx="fade" style="margin-bottom:24px"><u>WHAT YOU GET</u><i></i>€0</div>
+    <span class="mask"><h1 data-in="0.1" data-fx="up">Three</h1></span><span class="mask"><h1 data-in="0.2" data-fx="up">tools.</h1></span><span class="mask"><h1 data-in="0.3" data-fx="up"><span>No cost.</span></h1></span></div>
+  <div class="rows">
+    <div class="row" data-in="0.6" data-fx="right"><b>01</b><s>1V1 TIMER</s><span>Chase timers and score for both players</span></div>
+    <div class="row" data-in="1.21" data-fx="right"><b>02</b><s>PERK TIMER</s><span>Endurance and Elusive, counted down live</span></div>
+    <div class="row" data-in="1.81" data-fx="right"><b>03</b><s>CROSSHAIR</s><span>Center-screen crosshair for ranged killers</span></div>
+  </div>
+  <div class="ft" data-in="2.72" data-fx="fade">NO ACCOUNT &nbsp;/&nbsp; WINDOWS 10 + 11 &nbsp;/&nbsp; RUNS OVER YOUR GAME</div>
+</section>
+
+<section class="scene feat" id="s2">
+  <div class="txt"><div class="kick" data-in="0.02" data-fx="fade"><u>FREE TOOLS</u><i></i>01</div>
+    <span class="mask"><h1 data-in="0.05" data-fx="up">1v1</h1></span><span class="mask"><h1 data-in="0.13" data-fx="up">Timer</h1></span>
+    <p class="d" data-in="0.3" data-fx="fade">Chase timing for 1v1s and tournaments, with the score on screen.</p>
+    <div class="tags"><span class="tag f" data-in="0.6" data-fx="fade">LIVE OVERLAY</span><span class="tag" data-in="0.7" data-fx="fade">3 PRESETS</span><span class="tag" data-in="0.8" data-fx="fade">F1 START / F2 SWAP</span></div></div>
+  <div class="app" data-in="0.05" data-fx="right"><iframe id="a1" src="/"></iframe></div>
+  <div class="mon" data-in="0.2" data-fx="right"><div class="lbl"><i></i>LIVE OVERLAY</div><iframe id="o1" src="/#1v1-overlay"></iframe></div>
+  <div class="cnt" data-in="0.3" data-fx="fade"><b>01</b> / 03</div>
+</section>
+
+<section class="scene feat" id="s3">
+  <div class="txt"><div class="kick" data-in="0.02" data-fx="fade"><u>FREE TOOLS</u><i></i>02</div>
+    <span class="mask"><h1 data-in="0.05" data-fx="up">Perk</h1></span><span class="mask"><h1 data-in="0.13" data-fx="up">Timer</h1></span>
+    <p class="d" data-in="0.3" data-fx="fade">Endurance and Elusive, counted down live. One hotkey starts both.</p>
+    <div class="tags"><span class="tag f" data-in="0.6" data-fx="fade">LIVE OVERLAY</span><span class="tag" data-in="0.7" data-fx="fade">AUDIO CUE</span><span class="tag" data-in="0.8" data-fx="fade">CLASSIC / GLASS / NEON</span></div></div>
+  <div class="app" data-in="0.05" data-fx="right"><iframe id="a2" src="/"></iframe></div>
+  <div class="mon" data-in="0.2" data-fx="right"><div class="lbl"><i></i>LIVE OVERLAY</div><iframe id="o2" src="/#ds-overlay"></iframe></div>
+  <div class="cnt" data-in="0.3" data-fx="fade"><b>02</b> / 03</div>
+</section>
+
+<section class="scene feat" id="s4">
+  <div class="txt"><div class="kick" data-in="0.02" data-fx="fade"><u>FREE TOOLS</u><i></i>03</div>
+    <span class="mask"><h1 data-in="0.05" data-fx="up">Cross</h1></span><span class="mask"><h1 data-in="0.13" data-fx="up">hair</h1></span>
+    <p class="d" data-in="0.3" data-fx="fade">A center-screen crosshair for ranged killers. Any shape, color and size.</p>
+    <div class="tags"><span class="tag f" data-in="0.6" data-fx="fade">LIVE OVERLAY</span><span class="tag" data-in="0.7" data-fx="fade">CLICK-THROUGH</span><span class="tag" data-in="0.8" data-fx="fade">6 SHAPES</span></div></div>
+  <div class="app" data-in="0.05" data-fx="right"><iframe id="a3" src="/"></iframe></div>
+  <div class="mon" data-in="0.2" data-fx="right"><div class="lbl"><i></i>LIVE OVERLAY</div><iframe id="o3" src="/#crosshair-overlay"></iframe></div>
+  <div class="cnt" data-in="0.3" data-fx="fade"><b>03</b> / 03</div>
+</section>
+
+<section class="scene" id="s5">
+  <div class="l"><div class="kick" data-in="0.05" data-fx="fade" style="margin-bottom:24px"><u>SAFE TO USE</u><i></i>OUTSIDE THE GAME PROCESS</div>
+    <span class="mask"><h1 data-in="0.1" data-fx="up"><span class="x">No</span> injected code.</h1></span>
+    <span class="mask"><h1 data-in="1.21" data-fx="up"><span class="x">No</span> memory reads.</h1></span></div>
+  <p data-in="2.42" data-fx="fade">CrowSight draws on top of Dead by Daylight the same way OBS or Discord overlays do. It never touches the game.</p>
+</section>
+
+<section class="scene" id="s6">
+  <div class="l"><div class="kick" data-in="0.05" data-fx="fade"><u>CROWSIGHT PREMIUM</u><i></i>OPTIONAL</div>
+    <span class="mask"><h1 data-in="0.1" data-fx="up">Want more?</h1></span>
+    <div class="pr" data-in="0.6" data-fx="fade"><b>€19.99</b><span>ONE-TIME PAYMENT<br>FREE STAYS FREE</span></div></div>
+  <div class="g">
+    <div data-in="0.60" data-fx="right">STREAK COUNTER</div><div data-in="0.75" data-fx="right">STATISTICS</div>
+    <div data-in="0.90" data-fx="right">EVERY PERK TIMER</div><div data-in="1.05" data-fx="right">TOURNAMENT OVERLAY</div>
+    <div data-in="1.20" data-fx="right">SCRIM BUILDS</div><div data-in="1.35" data-fx="right">ORGANIZATION OVERLAY</div>
+    <div data-in="1.50" data-fx="right">MAP CALLOUTS</div><div class="m" data-in="1.65" data-fx="right">AND MORE</div>
+  </div>
+</section>
+
+<section class="scene" id="s7"><div class="c">
+  <img data-in="0.05" data-fx="pop" src="/logo-transparent.png">
+  <h1><span class="mask"><span data-in="0.1" data-fx="up">Get CrowSight</span></span><span class="mask"><em data-in="0.6" data-fx="up">Free</em></span></h1>
+  <div class="url" data-in="1.21" data-fx="fade">crowsightoverlay.com/download</div>
+  <div class="sm" data-in="1.81" data-fx="fade"><span>ALSO ON <b>ITCH.IO</b></span><span>DISCORD <b>discord.gg/5DAxU8tQKM</b></span><span>WINDOWS <b>10 + 11</b></span></div>
+</div></section>
+
+<div id="hdr"><div><b>CROWSIGHT</b><em>FREE</em></div><span id="sec"></span></div>
+<div id="bar"></div><div id="black"></div>
+<script>
+const V=location.search.includes('v');if(V)document.documentElement.classList.add('v');
+const B=2.4211, BEAT=B/4, TOTAL=14*B+7.2;
+const ST=[0,2,4,6,8,10,12,14].map(n=>n*B), SEC=["","THE FREE VERSION","1V1 TIMER","PERK TIMER","CROSSHAIR","SAFE TO USE","PREMIUM",""];
+const $=s=>document.querySelector(s), cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const eo=x=>1-Math.pow(1-cl(x),4), back=x=>{x=cl(x);const c=1.7;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const scenes=[...document.querySelectorAll('.scene')];
+const doc=id=>$('#'+id).contentDocument, win=id=>$('#'+id).contentWindow;
+const txt=e=>((e.textContent||'')+'|'+(e.getAttribute('aria-label')||'')+'|'+(e.title||'')).trim();
+function btn(id,re,n=0){const m=[...doc(id).querySelectorAll('button')].filter(e=>re.test(txt(e)));if(!m[n])throw new Error('no button '+re+' in '+id);m[n].click()}
+function range(id,label,v){const e=[...doc(id).querySelectorAll('input[type=range]')].find(e=>txt(e).includes(label));if(!e)throw new Error('no range '+label);
+  Object.getOwnPropertyDescriptor(win(id).HTMLInputElement.prototype,'value').set.call(e,v);e.dispatchEvent(new (win(id).Event)('input',{bubbles:true}));e.dispatchEvent(new (win(id).Event)('change',{bubbles:true}))}
+const scroll=(id,y)=>{doc(id).querySelector('main').scrollTop=y};
+const hot=(id,a)=>win(id).__emitLocal('lowlevel-hotkey-fired',a);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+window.prep=async()=>{
+  await document.fonts.load('100px Anton'); await document.fonts.ready;
+  btn('a1',/^\+/,0);await sleep(60);btn('a1',/^\+/,0);await sleep(60);btn('a1',/^\+/,1);await sleep(100);scroll('a1',V?440:430);
+  btn('a2',/^perk timer/i);await sleep(400);scroll('a2',V?330:180);
+  btn('a3',/^crosshair/i);await sleep(400);range('a3','Length',18);range('a3','Thickness',3);range('a3','Gap',5);range('a3','Dot Size',3);await sleep(100);scroll('a3',V?320:310);
+  await sleep(300);return 'ok'};
+const ACT=[
+ [ST[2]+.30,()=>hot('a1','cycle')],[ST[2]+3*BEAT,()=>btn('a1',/^horizontal/i)],[ST[2]+5*BEAT,()=>btn('a1',/^glass/i)],
+ [ST[3]+.30,()=>hot('a2','ds')],[ST[3]+3*BEAT,()=>btn('a2',/^glass/i)],[ST[3]+5*BEAT,()=>btn('a2',/^neon/i)],
+ [ST[4]+1.5*BEAT,()=>btn('a3',/Color #36D7FF/i)],[ST[4]+2.5*BEAT,()=>btn('a3',/^circle \+ dot/i)],[ST[4]+3.5*BEAT,()=>btn('a3',/Color #FF3B6B/i)],
+ [ST[4]+4.5*BEAT,()=>btn('a3',/^t\|/i)],[ST[4]+5.5*BEAT,()=>btn('a3',/Color #FFE14D/i)],[ST[4]+6.5*BEAT,()=>btn('a3',/^cross\|/i)],
+];let ai=0;window.log=[];
+function fit(){ // overlay iframes follow the size the real overlay asks its window for
+  for(const [id,max] of [['o1',2],['o2',1.5]]){const f=$('#'+id),s=f.contentWindow.__size&&f.contentWindow.__size.size;if(!s)continue;
+    const k=Math.min(max,410/s.width,190/s.height);f.style.width=s.width+'px';f.style.height=s.height+'px';f.style.transform=`translate(-50%,-50%) scale(${k})`}
+  const c=$('#o3');c.style.width='200px';c.style.height='116px';c.style.transform='translate(-50%,-50%) scale(2.25)';c.style.top='50%'}
+window.seek=t=>{
+  while(ai<ACT.length&&t>=ACT[ai][0]){try{ACT[ai][1]();log.push('ok '+ai)}catch(e){log.push('ERR '+ai+' '+e.message)}ai++}
+  fit();
+  const beat=t>=ST[2]?Math.exp(-((t-ST[2])%BEAT)*6):0, r=document.documentElement.style;
+  r.setProperty('--x1',(18+6*Math.sin(t*.21))+'%');r.setProperty('--y1',(78+8*Math.cos(t*.17))+'%');r.setProperty('--a1',.5+.14*beat);
+  r.setProperty('--x2',(84+5*Math.cos(t*.13))+'%');r.setProperty('--y2',(16+7*Math.sin(t*.19))+'%');r.setProperty('--a2',.6+.1*beat);
+  let cur=0;
+  scenes.forEach((sc,i)=>{const s=ST[i],e=i<7?ST[i+1]:TOTAL,on=t>=s&&t<e;sc.style.visibility=on?'visible':'hidden';if(!on)return;cur=i;
+    const u=t-s,out=i<7?eo((u-(e-s-.22))/.22):0;sc.style.opacity=1-out;sc.style.transform=`translateX(${-out*26}px)`;
+    sc.querySelectorAll('[data-in]').forEach(el=>{const d=+el.dataset.in,fx=el.dataset.fx,p=eo((u-d)/.5);
+      if(fx==='up'){el.style.transform=`translateY(${(1-p)*105}%)`}
+      else if(fx==='fade'){el.style.opacity=p;el.style.transform=`translateY(${(1-p)*12}px)`}
+      else if(fx==='right'){el.style.opacity=p;el.style.transform=`translateX(${(1-p)*56}px)`}
+      else if(fx==='pop'){const q=cl((u-d)/.5);el.style.opacity=cl(q*3);el.style.transform=`scale(${.7+.3*back(q)})`}})});
+  $('#sec').textContent=SEC[cur];$('#hdr').style.opacity=(cur===0||cur===7)?0:eo((t-ST[1])/.4);
+  $('#bar').style.width=(t/TOTAL*innerWidth)+'px';
+  $('#black').style.opacity=cl((t-(TOTAL-.9))/.8)+cl(1-t/.35)};
+window.TOTAL=TOTAL;
+</script></body></html>
