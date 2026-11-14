@@ -26,7 +26,7 @@ const DEFAULT_ORDER: PerkId[] = ["bt", "elusive"];
 // picked. Duplicated from DSTimer.tsx on purpose: importing it would pull the
 // whole main-window bundle into the overlay's chunk.
 function perkIconUrl(id: PerkId): string {
-  return new URL(`./assets/perk-timer/${id}.png`, import.meta.url).href;
+  return new URL(`./assets/perk-timer/${id}.webp`, import.meta.url).href;
 }
 
 // Overlay visual presets. classic = compact opaque card, glass = frosted

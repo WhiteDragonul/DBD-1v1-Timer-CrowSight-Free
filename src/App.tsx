@@ -22,6 +22,7 @@ import Crosshair from "./Crosshair";
 import PremiumSection from "./components/PremiumSection";
 import UpdateBanner from "./components/UpdateBanner";
 import { ToastHost } from "./Toast";
+import crowsightLogo from "./assets/crowsight-logo.webp";
 
 // ─── Pages ───────────────────────────────────────────────────────────────────
 // Everything here is free and account-less, so there is no gate: the tab strip
@@ -97,7 +98,7 @@ function LogoMark({ accent }: { accent: string }) {
       filter: `drop-shadow(0 0 8px ${accent}90) drop-shadow(0 0 3px ${accent}70)`,
     }}>
       <img
-        src="/logo-transparent.png"
+        src={crowsightLogo}
         alt=""
         style={{ width: "36px", height: "36px", display: "block", objectFit: "contain" }}
       />

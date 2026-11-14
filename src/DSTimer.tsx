@@ -62,7 +62,7 @@ const ALL_PERKS: PerkId[] = ["bt", "elusive"];
 // Status-effect glyph per row. White line art on transparent, so the UI masks
 // it with the row's colour rather than drawing it as an image - see PerkGlyph.
 export function perkIconUrl(id: PerkId): string {
-  return new URL(`./assets/perk-timer/${id}.png`, import.meta.url).href;
+  return new URL(`./assets/perk-timer/${id}.webp`, import.meta.url).href;
 }
 
 /** The glyph, tinted to the perk's colour. A mask rather than an <img> so a
