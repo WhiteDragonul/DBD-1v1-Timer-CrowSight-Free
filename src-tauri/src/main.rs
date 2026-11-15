@@ -89,7 +89,35 @@ fn set_bare_modifiers(ctrl: bool, alt: bool, shift: bool) {
     lowlevel::set_bare_modifiers(ctrl, alt, shift);
 }
 
+/// WebView2 (Chromium) suspends a renderer whose window it considers fully
+/// occluded or backgrounded, and throttles its timers. A fullscreen game
+/// covering our windows triggers exactly that: the low-level hook still fires
+/// and Rust still emits `lowlevel-hotkey-fired`, but the webview holding the
+/// `window.__hotkey1v1*` handlers doesn't run it until the user alt-tabs back -
+/// so the timer looked like it only started from another window.
+///
+/// These Chromium switches turn that off for our process. Must be set before
+/// Tauri creates the WebView2 environment.
+#[cfg(target_os = "windows")]
+fn disable_webview_backgrounding() {
+    const FLAGS: &str = concat!(
+        "--disable-background-timer-throttling ",
+        "--disable-renderer-backgrounding ",
+        "--disable-backgrounding-occluded-windows ",
+        "--disable-features=CalculateNativeWinOcclusion",
+    );
+    // Respect an existing value (e.g. set by the user) by appending to it.
+    let value = match std::env::var("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS") {
+        Ok(prev) if !prev.trim().is_empty() => format!("{prev} {FLAGS}"),
+        _ => FLAGS.to_string(),
+    };
+    std::env::set_var("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", value);
+}
+
 fn main() {
+    #[cfg(target_os = "windows")]
+    disable_webview_backgrounding();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
